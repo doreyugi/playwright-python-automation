@@ -67,3 +67,22 @@ def test_register_user(page: Page):
     expect(page.get_by_text('ACCOUNT DELETED!')).to_be_visible()
     page.get_by_role('link', name='Continue').click()
 
+def test_login_user_correct(page: Page):
+    # 1. Launch browser
+    # 2. Navigate to url 'http://automationexercise.com'
+    page.goto('http://automationexercise.com')
+    # 3. Verify that home page is visible successfully
+    expect(page).to_have_title("Automation Exercise")
+    # 4. Click on 'Signup / Login' button
+    page.get_by_role('link', name='Signup / Login')
+    # 5. Verify 'Login to your account' is visible
+    expect(page.get_by_text('Login to your account')).to_be_visible()
+    # 6. Enter correct email address and password
+    page.locator('[data-qa="login-email"]').fill("banana@gmail.com")
+    page.locator('[data-qa="login-password"]').fill("banana")
+    # 7. Click 'login' button
+    page.get_by_role("button", name="Login").click()
+    # 8. Verify that 'Logged in as username' is visible
+    expect(page.get_by_text('Logged in as apple')).to_be_visible()
+    # 9. Click 'Delete Account' button
+    # 10. Verify that 'ACCOUNT DELETED!' is visible
