@@ -2,15 +2,16 @@
 
 ## Overview
 
-This is a **personal automation testing project** to practice UI test automation using **Selenium with Python**.
-The project covers common **end-to-end test scenarios** for a sample e-commerce website.
+This is a **personal automation testing project** to practice UI test automation using **Playwright with Python**.
+
+The project covers common **end-to-end test scenarios** for a sample e-commerce website: https://www.automationexercise.com/
 
 ---
 
 ## Tech Stack
 
 * Language: Python
-* Automation Tool: Selenium WebDriver
+* Automation Tool: Playwright
 * Test Framework: PyTest
 * Dependency Management: pip
 * Browser: Chrome

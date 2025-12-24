@@ -1,20 +1,13 @@
-# from selenium.webdriver.common.by import By
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.support import expected_conditions as EC
-
-# def test_register_user(driver):
-#     driver.get("http://automationexercise.com")
-
-#     # Wait till the homepage load
-#     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "col-sm-12" )))
-#     # driver.find_element(By.LINK_TEXT, "Signup / Login").click()
-#     driver.find_element(By.CSS_SELECTOR, 'a[href="login"]').click()
-#     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "signup-form")))
-
 from playwright.sync_api import sync_playwright
 from playwright.sync_api import expect
 from playwright.sync_api import Page
+import re
 
+username = "apple"
+user_email = "applebottomjeans@gmail.com"
+user_password = "applebottomjeans"
+
+# Test Case 1: Register User
 def test_register_user(page: Page):
     # 1. Launch browser
     # 2. Navigate to url 'http://automationexercise.com'
@@ -26,15 +19,15 @@ def test_register_user(page: Page):
     # 5. Verify 'New User Signup!' is visible
     expect(page.get_by_text('New User Signup!')).to_be_visible()
     # 6. Enter name and email address
-    page.locator('[data-qa="signup-name"]').fill("apple")
-    page.locator('[data-qa="signup-email"]').fill("applebottomjeans@gmail.com")
+    page.locator('[data-qa="signup-name"]').fill(username)
+    page.locator('[data-qa="signup-email"]').fill(user_email)
     # 7. Click 'Signup' button
     page.get_by_role('button', name="Signup").click()
     # 8. Verify that 'ENTER ACCOUNT INFORMATION' is visible
     expect(page.get_by_text('ENTER ACCOUNT INFORMATION')).to_be_visible()
     # 9. Fill details: Title, Name, Email, Password, Date of birth
     page.get_by_role('radio', name="Mr.").click()
-    page.locator('[data-qa="password"]').fill("applebottomjeans")
+    page.locator('[data-qa="password"]').fill(user_password)
     page.locator("#days").select_option("5")
     page.locator("#months").select_option("July")
     page.locator("#years").select_option("1993")
@@ -61,12 +54,8 @@ def test_register_user(page: Page):
     page.get_by_role('link', name='Continue').click()
     # 16. Verify that 'Logged in as username' is visible
     expect(page.get_by_text('Logged in as apple')).to_be_visible()
-    # 17. Click 'Delete Account' button
-    page.get_by_role('link', name='Delete Account').click()
-    # 18. Verify that 'ACCOUNT DELETED!' is visible and click 'Continue' button
-    expect(page.get_by_text('ACCOUNT DELETED!')).to_be_visible()
-    page.get_by_role('link', name='Continue').click()
 
+# Test Case 2: Login User with correct email and password
 def test_login_user_correct(page: Page):
     # 1. Launch browser
     # 2. Navigate to url 'http://automationexercise.com'
@@ -74,15 +63,98 @@ def test_login_user_correct(page: Page):
     # 3. Verify that home page is visible successfully
     expect(page).to_have_title("Automation Exercise")
     # 4. Click on 'Signup / Login' button
-    page.get_by_role('link', name='Signup / Login')
+    page.get_by_role('link', name='Signup / Login').click()
     # 5. Verify 'Login to your account' is visible
     expect(page.get_by_text('Login to your account')).to_be_visible()
     # 6. Enter correct email address and password
-    page.locator('[data-qa="login-email"]').fill("banana@gmail.com")
-    page.locator('[data-qa="login-password"]').fill("banana")
+    page.locator('[data-qa="login-email"]').fill(user_email)
+    page.locator('[data-qa="login-password"]').fill(user_password)
+    # 7. Click 'login' button
+    page.get_by_role("button", name="Login").click()
+    # 8. Verify that 'Logged in as username' is visible
+    expect(page.get_by_text('Logged in as apple')).to_be_visible()
+
+# Test Case 3: Login User with incorrect email and password
+def test_login_user_incorrect(page: Page):
+    # 1. Launch browser
+    # 2. Navigate to url 'http://automationexercise.com'
+    page.goto('http://automationexercise.com')
+    # 3. Verify that home page is visible successfully
+    expect(page).to_have_title("Automation Exercise")
+    # 4. Click on 'Signup / Login' button
+    page.get_by_role('link', name='Signup / Login').click()
+    # 5. Verify 'Login to your account' is visible
+    expect(page.get_by_text('Login to your account')).to_be_visible()
+    # 6. Enter incorrect email address and password
+    page.locator('[data-qa="login-email"]').fill(user_email)
+    page.locator('[data-qa="login-password"]').fill(user_password+"123")
+    # 7. Click 'login' button
+    page.get_by_role("button", name="Login").click()
+    # 8. Verify error 'Your email or password is incorrect!' is visible
+    expect(page.get_by_text('Your email or password is incorrect!')).to_be_visible()
+
+# Test Case 4: Logout User
+def test_logout_user(page: Page):
+    # 1. Launch browser
+    # 2. Navigate to url 'http://automationexercise.com'
+    page.goto('http://automationexercise.com')
+    # 3. Verify that home page is visible successfully
+    expect(page).to_have_title("Automation Exercise")
+    # 4. Click on 'Signup / Login' button
+    page.get_by_role('link', name='Signup / Login').click()
+    # 5. Verify 'Login to your account' is visible
+    expect(page.get_by_text('Login to your account')).to_be_visible()
+    # 6. Enter correct email address and password
+    page.locator('[data-qa="login-email"]').fill(user_email)
+    page.locator('[data-qa="login-password"]').fill(user_password)
+    # 7. Click 'login' button
+    page.get_by_role("button", name="Login").click()
+    # 8. Verify that 'Logged in as username' is visible
+    expect(page.get_by_text('Logged in as apple')).to_be_visible()
+    # 9. Click 'Logout' button
+    page.get_by_role('link', name='Logout').click()
+    #10. Verify that user is navigated to login page
+    expect(page).to_have_title(re.compile("Signup / Login", re.IGNORECASE))
+
+# Test Case 5: Register User with existing email
+def test_register_existing_user(page: Page):
+    # 1. Launch browser
+    # 2. Navigate to url 'http://automationexercise.com'
+    page.goto("http://automationexercise.com")
+    # 3. Verify that home page is visible successfully
+    expect(page).to_have_title("Automation Exercise")
+    # 4. Click on 'Signup / Login' button
+    page.get_by_role('link', name="Signup / Login").click()
+    # 5. Verify 'New User Signup!' is visible
+    expect(page.get_by_text('New User Signup!')).to_be_visible()
+    # 6. Enter name and already registered email address
+    page.locator('[data-qa="signup-name"]').fill(username)
+    page.locator('[data-qa="signup-email"]').fill(user_email)
+    # 7. Click 'Signup' button
+    page.get_by_role('button', name='Signup').click()
+    # 8. Verify error 'Email Address already exist!' is visible
+    expect(page.get_by_text('Email Address already exist!')).to_be_visible()
+
+# Test Case ???: Delete user
+def test_delete_user(page: Page):
+    # 1. Launch browser
+    # 2. Navigate to url 'http://automationexercise.com'
+    page.goto('http://automationexercise.com')
+    # 3. Verify that home page is visible successfully
+    expect(page).to_have_title("Automation Exercise")
+    # 4. Click on 'Signup / Login' button
+    page.get_by_role('link', name='Signup / Login').click()
+    # 5. Verify 'Login to your account' is visible
+    expect(page.get_by_text('Login to your account')).to_be_visible()
+    # 6. Enter correct email address and password
+    page.locator('[data-qa="login-email"]').fill(user_email)
+    page.locator('[data-qa="login-password"]').fill(user_password)
     # 7. Click 'login' button
     page.get_by_role("button", name="Login").click()
     # 8. Verify that 'Logged in as username' is visible
     expect(page.get_by_text('Logged in as apple')).to_be_visible()
     # 9. Click 'Delete Account' button
-    # 10. Verify that 'ACCOUNT DELETED!' is visible
+    page.get_by_role('link', name='Delete Account').click()
+    # 10. Verify that 'ACCOUNT DELETED!' is visible and click 'Continue' button
+    expect(page.get_by_text('ACCOUNT DELETED!')).to_be_visible()
+    page.get_by_role('link', name='Continue').click()
