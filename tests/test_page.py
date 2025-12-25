@@ -19,14 +19,19 @@ def test_contact_us_form(page: Page):
     page.locator('[data-qa="message"]').fill("The banana is not ripe enough")
     # 7. Upload file
     page.locator('[name="upload_file"]').set_input_files(r'.\tests\fixtures\Complaint.txt')
-    
     # Register handling dialog before click submit
     page.on('dialog', lambda dialog: dialog.accept())
     # 8. Click 'Submit' button
-    page.locator('[data-qa="submit-button"]').click()
+    page.locator('[data-qa="submit-button"]').click(delay=500)
     # 9. Click OK button
     # 10. Verify success message 'Success! Your details have been submitted successfully.' is visible
-    expect(page.get_by_text('Success! Your details have been submitted successfully.')).to_be_visible()
+    expect(page.locator("#contact-page").get_by_text("Success! Your details have been submitted successfully.")).to_be_visible()
     # 11. Click 'Home' button and verify that landed to home page successfully
-    page.get_by_role('button', name='Home').click()
+    page.locator("#contact-page").get_by_role('link', name='Home').click()
     expect(page).to_have_title("Automation Exercise")
+
+# def test_alert(page: Page):
+#     page.on('dialog', lambda dialog: dialog.accept())
+#     page.goto("https://www.tutorialspoint.com/selenium/practice/alerts.php")
+#     page.locator('[onclick="myDesk()"]').click()
+#     page.wait_for_timeout(5000)
