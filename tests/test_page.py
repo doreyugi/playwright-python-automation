@@ -1,5 +1,6 @@
 from playwright.sync_api import expect
 from playwright.sync_api import Page
+import re
 
 # Test Case 6: Contact Us Form
 def test_contact_us_form(page: Page):
@@ -25,10 +26,22 @@ def test_contact_us_form(page: Page):
     page.locator('[data-qa="submit-button"]').click(delay=500)
     # 9. Click OK button
     # 10. Verify success message 'Success! Your details have been submitted successfully.' is visible
-    expect(page.locator("#contact-page").get_by_text("Success! Your details have been submitted successfully.")).to_be_visible()
+    expect(page.locator("#contact-page")).to_contain_text("Success! Your details have been submitted successfully.")
     # 11. Click 'Home' button and verify that landed to home page successfully
     page.locator("#contact-page").get_by_role('link', name='Home').click()
     expect(page).to_have_title("Automation Exercise")
+
+# Test Case 7: Verify Test Cases Page
+def test_test_case_page(page: Page):
+    # 1. Launch browser
+    # 2. Navigate to url 'http://automationexercise.com'
+    page.goto('http://automationexercise.com')
+    # 3. Verify that home page is visible successfully
+    expect(page).to_have_title("Automation Exercise")
+    # 4. Click on 'Test Cases' button
+    page.locator('a:has(i)').filter(has_text="Test Cases").click()
+    # 5. Verify 'GET IN TOUCH' is visible
+    expect(page).to_have_title(re.compile(r"\btest\s+cases\b", re.IGNORECASE))
 
 # def test_alert(page: Page):
 #     page.on('dialog', lambda dialog: dialog.accept())
