@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+from pages.page_cart import CartPage
 import re
 
 class CartModal():
@@ -11,6 +12,7 @@ class CartModal():
 
     def click_view_cart(self):
         self.cart_modal.get_by_role('link', name="View Cart").click()
+        return CartPage(self.page)
 
 class ProductList():
     def __init__(self, page: Page):
@@ -18,13 +20,14 @@ class ProductList():
         self.product_list = self.page.locator('.features_items .col-sm-4')
 
     def is_product_list_visible(self):
-        expect(self.product_list).to_be_visible() 
+        # expect(self.product_list).to_be_visible() 
         count = self.product_list.count()
         for i in range(count):
             expect(self.product_list.nth(i)).to_be_visible()
     
     def click_view_nth_product(self, idx):
         self.product_list.nth(idx).get_by_text("View Product").click()
+        return ProductDetailPage(self.page)
 
     def click_add_to_cart_nth_product(self, idx):
         self.product_list.nth(idx).hover()

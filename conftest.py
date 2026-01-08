@@ -1,11 +1,16 @@
-# import pytest
-# from selenium import webdriver
-# from selenium.webdriver.chrome.service import Service
+import pytest
+from pages.page_homepage import HomePage
 
-# @pytest.fixture
-# def driver():
-#     service = Service(executable_path="chromedriver.exe")
-#     driver = webdriver.Chrome(service=service)
-#     driver.maximize_window()
-#     yield driver
-#     driver.quit()
+BASE_URL = "http://automationexercise.com"
+
+@pytest.fixture
+def homepage(page):
+    # 1. Launch browser
+    # 2. Navigate to url 'http://automationexercise.com'
+    page.goto(BASE_URL)
+    # 3. Verify that home page is visible successfully
+    homepage = HomePage(page)
+    homepage.verify_homepage()
+    return homepage
+
+

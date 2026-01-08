@@ -1,4 +1,4 @@
-from pages.page_homepage import Footer
+from pages.page_header_footer import Footer
 from playwright.sync_api import Page, expect
 
 class CartPage():

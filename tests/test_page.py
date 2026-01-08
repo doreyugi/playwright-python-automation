@@ -1,47 +1,26 @@
-from playwright.sync_api import expect
-from playwright.sync_api import Page
-import re
-
 # Test Case 6: Contact Us Form
-def test_contact_us_form(page: Page):
-    # 1. Launch browser
-    # 2. Navigate to url 'http://automationexercise.com'
-    page.goto('http://automationexercise.com')
-    # 3. Verify that home page is visible successfully
-    expect(page).to_have_title("Automation Exercise")
+def test_contact_us_form(homepage):
     # 4. Click on 'Contact Us' button
-    page.get_by_role('link', name='Contact Us').click()
+    contact_us_page = homepage.header.click_contact_us_button()
     # 5. Verify 'GET IN TOUCH' is visible
-    expect(page.get_by_text('GET IN TOUCH')).to_be_visible()
+    contact_us_page.verify_get_in_touch_text()
     # 6. Enter name, email, subject and message
-    page.locator('[data-qa="name"]').fill("banana")
-    page.locator('[data-qa="email"]').fill("banana123@gmail.com")
-    page.locator('[data-qa="subject"]').fill("Complaint about banana")
-    page.locator('[data-qa="message"]').fill("The banana is not ripe enough")
     # 7. Upload file
-    page.locator('[name="upload_file"]').set_input_files(r'.\tests\fixtures\Complaint.txt')
-    # Register handling dialog before click submit
-    page.on('dialog', lambda dialog: dialog.accept())
     # 8. Click 'Submit' button
-    page.locator('[data-qa="submit-button"]').click(delay=500)
     # 9. Click OK button
+    contact_us_page.fill_info_and_submit("banana123@gmail.com", "banana", "Complaint about banana", "The banana is not ripe enough", r'.\tests\fixtures\Complaint.txt')
     # 10. Verify success message 'Success! Your details have been submitted successfully.' is visible
-    expect(page.locator("#contact-page")).to_contain_text("Success! Your details have been submitted successfully.")
+    contact_us_page.verify_success_text()
     # 11. Click 'Home' button and verify that landed to home page successfully
-    page.locator("#contact-page").get_by_role('link', name='Home').click()
-    expect(page).to_have_title("Automation Exercise")
+    contact_us_page.click_home_button()
+    homepage.verify_homepage()
 
 # Test Case 7: Verify Test Cases Page
-def test_test_case_page(page: Page):
-    # 1. Launch browser
-    # 2. Navigate to url 'http://automationexercise.com'
-    page.goto('http://automationexercise.com')
-    # 3. Verify that home page is visible successfully
-    expect(page).to_have_title("Automation Exercise")
+def test_test_case_page(homepage):
     # 4. Click on 'Test Cases' button
-    page.locator('a:has(i)').filter(has_text="Test Cases").click()
-    # 5. Verify 'GET IN TOUCH' is visible
-    expect(page).to_have_title(re.compile(r"\btest\s+cases\b", re.IGNORECASE))
+    test_case_page = homepage.header.click_test_cases_button()
+    # 5. Verify user is navigated to test cases page successfully
+    test_case_page.verify_test_case_page()
 
 # def test_alert(page: Page):
 #     page.on('dialog', lambda dialog: dialog.accept())
