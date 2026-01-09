@@ -1,159 +1,112 @@
 from playwright.sync_api import expect
 from playwright.sync_api import Page
-import re
 
 username = "apple"
 user_email = "applebottomjeans@gmail.com"
 user_password = "applebottomjeans"
+DOB_day = "5"
+DOB_month = "July"
+DOB_year = "1993"
+first_name = "abc"
+last_name = "def"
+company = "ABC Co."
+address1 = "362 Celestia"
+address2 = "462 Heavenly Celestia"
+country = "Singapore"
+state = "New York"
+city = "New York"
+zipcode = "70000"
+mobile_number = "70000"
 
 # Test Case 1: Register User
-def test_register_user(page: Page):
-    # 1. Launch browser
-    # 2. Navigate to url 'http://automationexercise.com'
-    page.goto("http://automationexercise.com")
-    # 3. Verify that home page is visible successfully
-    expect(page).to_have_title("Automation Exercise")
+def test_register_user(homepage):
     # 4. Click on 'Signup / Login' button
-    page.get_by_role('link', name="Signup / Login").click()
+    signup_login_page = homepage.header.click_signup_login_button()
     # 5. Verify 'New User Signup!' is visible
-    expect(page.get_by_text('New User Signup!')).to_be_visible()
+    signup_login_page.is_new_user_signup_visible()
     # 6. Enter name and email address
-    page.locator('[data-qa="signup-name"]').fill(username)
-    page.locator('[data-qa="signup-email"]').fill(user_email)
     # 7. Click 'Signup' button
-    page.get_by_role('button', name="Signup").click()
+    signup_login_page.signup(username, user_email)
     # 8. Verify that 'ENTER ACCOUNT INFORMATION' is visible
-    expect(page.get_by_text('ENTER ACCOUNT INFORMATION')).to_be_visible()
+    signup_login_page.is_enter_account_information_visible()
     # 9. Fill details: Title, Name, Email, Password, Date of birth
-    page.get_by_role('radio', name="Mr.").click()
-    page.locator('[data-qa="password"]').fill(user_password)
-    page.locator("#days").select_option("5")
-    page.locator("#months").select_option("July")
-    page.locator("#years").select_option("1993")
     # 10. Select checkbox 'Sign up for our newsletter!'
-    page.get_by_role("checkbox", name='Sign up for our newsletter!').check()
     # 11. Select checkbox 'Receive special offers from our partners!'
-    page.get_by_role("checkbox", name='Receive special offers from our partners!').check()
     # 12. Fill details: First name, Last name, Company, Address, Address2, Country, State, City, Zipcode, Mobile Number
-    page.locator("#first_name").fill("abc")
-    page.locator("#last_name").fill("def")
-    page.locator("#company").fill("ABC Co.")
-    page.locator("#address1").fill("362 Celestia")
-    page.locator("#address2").fill("462 Heavenly Celestia")
-    page.locator("#country").select_option("Singapore")
-    page.locator("#state").fill("New York")
-    page.locator("#city").fill("New York")
-    page.locator("#zipcode").fill("70000")
-    page.locator("#mobile_number").fill("70000")
     # 13. Click 'Create Account button'
-    page.get_by_role('button', name='Create Account').click()
+    signup_login_page.fill_signup_form(user_password, DOB_day, DOB_month, DOB_year, first_name, last_name, company, address1, address2, country, state, city, zipcode, mobile_number)
     # 14. Verify that 'ACCOUNT CREATED!' is visible
-    expect(page.get_by_text('ACCOUNT CREATED!')).to_be_visible()
+    signup_login_page.verify_signup_success_message()
     # 15. Click 'Continue' button
-    page.get_by_role('link', name='Continue').click()
+    signup_login_page.click_continue_button()
     # 16. Verify that 'Logged in as username' is visible
-    expect(page.get_by_text('Logged in as apple')).to_be_visible()
+    homepage.header.verify_logged_in_as_username(username)
 
 # Test Case 2: Login User with correct email and password
-def test_login_user_correct(page: Page):
-    # 1. Launch browser
-    # 2. Navigate to url 'http://automationexercise.com'
-    page.goto('http://automationexercise.com')
-    # 3. Verify that home page is visible successfully
-    expect(page).to_have_title("Automation Exercise")
+def test_login_user_correct(homepage):
     # 4. Click on 'Signup / Login' button
-    page.get_by_role('link', name='Signup / Login').click()
+    signup_login_page = homepage.header.click_signup_login_button()
     # 5. Verify 'Login to your account' is visible
-    expect(page.get_by_text('Login to your account')).to_be_visible()
+    signup_login_page.is_login_to_your_account_visible()
     # 6. Enter correct email address and password
-    page.locator('[data-qa="login-email"]').fill(user_email)
-    page.locator('[data-qa="login-password"]').fill(user_password)
     # 7. Click 'login' button
-    page.get_by_role("button", name="Login").click()
+    signup_login_page.login(user_email, user_password)
     # 8. Verify that 'Logged in as username' is visible
-    expect(page.get_by_text('Logged in as apple')).to_be_visible()
+    homepage.header.verify_logged_in_as_username(username)
 
 # Test Case 3: Login User with incorrect email and password
-def test_login_user_incorrect(page: Page):
-    # 1. Launch browser
-    # 2. Navigate to url 'http://automationexercise.com'
-    page.goto('http://automationexercise.com')
-    # 3. Verify that home page is visible successfully
-    expect(page).to_have_title("Automation Exercise")
+def test_login_user_incorrect(homepage):
     # 4. Click on 'Signup / Login' button
-    page.get_by_role('link', name='Signup / Login').click()
+    signup_login_page = homepage.header.click_signup_login_button()
     # 5. Verify 'Login to your account' is visible
-    expect(page.get_by_text('Login to your account')).to_be_visible()
+    signup_login_page.is_login_to_your_account_visible()
     # 6. Enter incorrect email address and password
-    page.locator('[data-qa="login-email"]').fill(user_email)
-    page.locator('[data-qa="login-password"]').fill(user_password+"123")
     # 7. Click 'login' button
-    page.get_by_role("button", name="Login").click()
+    signup_login_page.login(user_email, user_password+"123")
     # 8. Verify error 'Your email or password is incorrect!' is visible
-    expect(page.get_by_text('Your email or password is incorrect!')).to_be_visible()
+    signup_login_page.verify_login_error_message()
 
 # Test Case 4: Logout User
-def test_logout_user(page: Page):
-    # 1. Launch browser
-    # 2. Navigate to url 'http://automationexercise.com'
-    page.goto('http://automationexercise.com')
-    # 3. Verify that home page is visible successfully
-    expect(page).to_have_title("Automation Exercise")
+def test_logout_user(homepage):
     # 4. Click on 'Signup / Login' button
-    page.get_by_role('link', name='Signup / Login').click()
+    signup_login_page = homepage.header.click_signup_login_button()
     # 5. Verify 'Login to your account' is visible
-    expect(page.get_by_text('Login to your account')).to_be_visible()
+    signup_login_page.is_login_to_your_account_visible()
     # 6. Enter correct email address and password
-    page.locator('[data-qa="login-email"]').fill(user_email)
-    page.locator('[data-qa="login-password"]').fill(user_password)
     # 7. Click 'login' button
-    page.get_by_role("button", name="Login").click()
+    signup_login_page.login(user_email, user_password)
     # 8. Verify that 'Logged in as username' is visible
-    expect(page.get_by_text('Logged in as apple')).to_be_visible()
+    homepage.header.verify_logged_in_as_username(username)
     # 9. Click 'Logout' button
-    page.get_by_role('link', name='Logout').click()
+    signup_login_page = homepage.header.click_logout_button()
     #10. Verify that user is navigated to login page
-    expect(page).to_have_title(re.compile("Signup / Login", re.IGNORECASE))
+    signup_login_page.verify_signup_login_page()
 
 # Test Case 5: Register User with existing email
-def test_register_existing_user(page: Page):
-    # 1. Launch browser
-    # 2. Navigate to url 'http://automationexercise.com'
-    page.goto("http://automationexercise.com")
-    # 3. Verify that home page is visible successfully
-    expect(page).to_have_title("Automation Exercise")
+def test_register_existing_user(homepage):
     # 4. Click on 'Signup / Login' button
-    page.get_by_role('link', name="Signup / Login").click()
+    signup_login_page = homepage.header.click_signup_login_button()
     # 5. Verify 'New User Signup!' is visible
-    expect(page.get_by_text('New User Signup!')).to_be_visible()
+    signup_login_page.is_new_user_signup_visible()
     # 6. Enter name and already registered email address
-    page.locator('[data-qa="signup-name"]').fill(username)
-    page.locator('[data-qa="signup-email"]').fill(user_email)
     # 7. Click 'Signup' button
-    page.get_by_role('button', name='Signup').click()
+    signup_login_page.signup(username, user_email)
     # 8. Verify error 'Email Address already exist!' is visible
-    expect(page.get_by_text('Email Address already exist!')).to_be_visible()
+    signup_login_page.verify_signup_email_exists_message()
 
 # Test Case ???: Delete user
-def test_delete_user(page: Page):
-    # 1. Launch browser
-    # 2. Navigate to url 'http://automationexercise.com'
-    page.goto('http://automationexercise.com')
-    # 3. Verify that home page is visible successfully
-    expect(page).to_have_title("Automation Exercise")
+def test_delete_user(homepage):
     # 4. Click on 'Signup / Login' button
-    page.get_by_role('link', name='Signup / Login').click()
+    signup_login_page = homepage.header.click_signup_login_button()
     # 5. Verify 'Login to your account' is visible
-    expect(page.get_by_text('Login to your account')).to_be_visible()
+    signup_login_page.is_login_to_your_account_visible()
     # 6. Enter correct email address and password
-    page.locator('[data-qa="login-email"]').fill(user_email)
-    page.locator('[data-qa="login-password"]').fill(user_password)
     # 7. Click 'login' button
-    page.get_by_role("button", name="Login").click()
+    signup_login_page.login(user_email, user_password)
     # 8. Verify that 'Logged in as username' is visible
-    expect(page.get_by_text('Logged in as apple')).to_be_visible()
+    homepage.header.verify_logged_in_as_username(username)
     # 9. Click 'Delete Account' button
-    page.get_by_role('link', name='Delete Account').click()
+    delete_account_page = homepage.header.click_delete_account_button()
     # 10. Verify that 'ACCOUNT DELETED!' is visible and click 'Continue' button
-    expect(page.get_by_text('ACCOUNT DELETED!')).to_be_visible()
-    page.get_by_role('link', name='Continue').click()
+    delete_account_page.verify_delete_account_page()
+    delete_account_page.click_continue_button()

@@ -20,6 +20,9 @@ class Header():
         self.page = page
         self.header = self.page.locator('header')
 
+    def verify_logged_in_as_username(self, username):
+        expect(self.page.get_by_text(f'Logged in as {username}')).to_be_visible()
+
     def click_cart_button(self):
         from pages.page_cart import CartPage
         self.header.get_by_text("Cart").click()
@@ -40,3 +43,18 @@ class Header():
         from pages.page_test_case import TestCasePage
         self.header.get_by_text("Test Cases").click()
         return TestCasePage(self.page)
+    
+    def click_signup_login_button(self):
+        from pages.page_signup_login import SignupLoginPage
+        self.header.get_by_text("Signup / Login").click()
+        return SignupLoginPage(self.page)
+    
+    def click_logout_button(self):
+        from pages.page_signup_login import SignupLoginPage
+        self.header.get_by_text("Logout").click()
+        return SignupLoginPage(self.page)
+    
+    def click_delete_account_button(self):
+        from pages.page_signup_login import DeleteAccountPage
+        self.header.get_by_text("Delete Account").click()
+        return DeleteAccountPage(self.page)
