@@ -2,62 +2,77 @@
 
 ## Overview
 
-This is a **personal automation testing project** to practice UI test automation using **Playwright with Python**.
+This is a **personal QA automation project** built to practice **UI end-to-end testing** using **Playwright with Python**.
 
-The project covers common **end-to-end test scenarios** for a sample e-commerce website: https://www.automationexercise.com/
+The project automates common user workflows for a sample e-commerce website:  
+https://www.automationexercise.com/
+
+It focuses on writing maintainable tests, applying the **Page Object Model (POM)**, and validating critical business flows such as authentication, product browsing, cart, and checkout.
 
 ---
 
 ## Tech Stack
 
-* Language: Python
-* Automation Tool: Playwright
-* Test Framework: PyTest
-* Dependency Management: pip
-* Browser: Chrome
+- **Language:** Python  
+- **Automation Tool:** Playwright  
+- **Test Framework:** PyTest  
+- **Dependency Management:** pip  
+- **Browser:** Chromium / Chrome  
 
 ---
 
-## Automated Test Cases
+## Project Structure
 
-1. Register User
-2. Login User (valid credentials)
-3. Login User (invalid credentials)
-4. Logout User
-5. Register with existing email
-6. Contact Us form
-7. Verify Test Cases page
-8. Verify All Products & Product Detail page
-9. Search Product
-10. Verify Subscription (Home page)
-11. Verify Subscription (Cart page)
-12. Add Products to Cart
-13. Verify Product Quantity in Cart
-14. Place Order: Register while Checkout
-15. Place Order: Register before Checkout
-16. Place Order: Login before Checkout
-17. Remove Products from Cart
-18. View Category Products
-19. View & Cart Brand Products
-20. Search Products & Verify Cart after Login
-21. Add Review on Product
-22. Add to Cart from Recommended Items
-23. Verify Address Details in Checkout
-24. Download Invoice after Purchase
-25. Verify Scroll Up using Arrow Button
-26. Verify Scroll Up without Arrow Button
+```text
+pages/          # Page Object Model (POM) classes
+tests/          # Test cases grouped by feature
+test_data/      # Test data (users, products)
+reports/        # HTML test reports
+conftest.py     # PyTest fixtures and setup
+pytest.ini      # PyTest configuration
+requirements.txt
+README.md
+```
 
----
+## Automated Test Coverage
 
-## How to Run
+The project automates test scenarios **provided by the application** and focuses on implementing them as maintainable and reusable UI automation tests.
+
+Covered scenarios include:
+
+- User Registration & Authentication (valid / invalid cases)
+- Product listing, product detail, and search
+- Add to cart, quantity validation, and cart management
+- Checkout flows (register before / during checkout, login checkout)
+- Subscription verification (home & cart)
+- Category and brand filtering
+- Product reviews and recommended items
+- Address validation and invoice download
+- UI behavior (scroll up with / without arrow)
+
+## How to Run the Tests
+
+### 1. Install dependencies
+Make sure Python is installed, then install required packages:
 
 ```bash
 pip install -r requirements.txt
+```
+
+### 2. Run all tests
+```bash
 pytest
 ```
 
----
+### 3. Run a specific test file (optional)
+```bash
+pytest tests/test_user.py
+```
 
 ## Notes
 
-This project is for **learning and practice purposes** and will be improved over time.
+- This is an **ongoing personal project** focused on learning and practicing QA automation.
+- Test scenarios are **based on test cases provided by the sample application**, with emphasis on automation implementation and framework design.
+- The project applies **Page Object Model (POM)** to improve maintainability and readability.
+- Debug artifacts and local configuration files are excluded from version control.
+- Test coverage is continuously expanded as the framework evolves.
