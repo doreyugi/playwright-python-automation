@@ -1,5 +1,6 @@
 from playwright.sync_api import Page, expect
 from pages.page_cart import CartPage
+from test_data.product_data import Product
 import re
 
 class CartModal():
@@ -32,6 +33,13 @@ class ProductList():
     def click_add_to_cart_nth_product(self, idx):
         self.product_list.nth(idx).hover()
         self.product_list.nth(idx).locator('.product-overlay').get_by_text("Add to cart").click()
+
+    def get_nth_product_info(self, idx):
+        product = self.product_list.nth(idx).locator('.productinfo')
+        name = product.locator("p").inner_text().strip()
+        price_text = product.locator("h2").inner_text().strip().replace("Rs. ", "")
+        price = int(price_text)
+        return Product(name, price)
 
 
 class AllProductPage():
@@ -82,3 +90,9 @@ class ProductDetailPage():
     def click_add_to_cart(self):
         self.product_info.get_by_role('button', name='Add to cart').click()
 
+    def get_product_info(self):
+        name = self.product_name.inner_text().strip()
+        price_text = self.product_price.inner_text().strip().removeprefix('Rs. ')
+        price = int(price_text)
+        quantity = int(self.product_quantity.input_value())
+        return Product(name, price, quantity)
