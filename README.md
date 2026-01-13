@@ -1,4 +1,4 @@
-# Selenium Automation Testing (Python)
+# Playwright Automation Testing (Python)
 
 ## Overview
 
