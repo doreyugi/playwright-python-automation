@@ -75,4 +75,4 @@ pytest tests/test_user.py
 - Test scenarios are **based on test cases provided by the sample application**, with emphasis on automation implementation and framework design.
 - The project applies **Page Object Model (POM)** to improve maintainability and readability.
 - Debug artifacts and local configuration files are excluded from version control.
-- Test coverage is continuously expanded as the framework evolves.
+- All test data used in this project (e.g. user accounts, emails, addresses) is **dummy data created for testing purposes only**.
