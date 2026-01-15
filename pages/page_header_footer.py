@@ -29,10 +29,10 @@ class Header():
         return CartPage(self.page)
 
     def click_products_button(self):
-        from pages.page_product import AllProductPage
+        from pages.page_product import ProductPage
         self.header.get_by_text("Products").click()
         #page.locator('a:has(i)').filter(has_text="Products").click()
-        return AllProductPage(self.page)
+        return ProductPage(self.page)
     
     def click_contact_us_button(self):
         from pages.page_contact_us import ContactUsPage

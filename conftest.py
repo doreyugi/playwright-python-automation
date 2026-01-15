@@ -7,7 +7,7 @@ BASE_URL = "http://automationexercise.com"
 def homepage(page):
     # 1. Launch browser
     # 2. Navigate to url 'http://automationexercise.com'
-    page.goto(BASE_URL)
+    page.goto(BASE_URL, wait_until="domcontentloaded")
     # 3. Verify that home page is visible successfully
     homepage = HomePage(page)
     homepage.verify_homepage()

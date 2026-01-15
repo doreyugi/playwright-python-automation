@@ -8,7 +8,7 @@ def test_contact_us_form(homepage):
     # 7. Upload file
     # 8. Click 'Submit' button
     # 9. Click OK button
-    contact_us_page.fill_info_and_submit("banana123@gmail.com", "banana", "Complaint about banana", "The banana is not ripe enough", r'.\tests\fixtures\Complaint.txt')
+    contact_us_page.fill_info_and_submit("banana123@gmail.com", "banana", "Complaint about banana", "The banana is not ripe enough", r'.\tests\files\Complaint.txt')
     # 10. Verify success message 'Success! Your details have been submitted successfully.' is visible
     contact_us_page.verify_success_text()
     # 11. Click 'Home' button and verify that landed to home page successfully

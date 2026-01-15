@@ -20,6 +20,9 @@ class ProductList():
         self.page = page
         self.product_list = self.page.locator('.features_items .col-sm-4')
 
+    def verify_product_list_title(self, title_text):
+        expect(self.page.locator('.features_items').get_by_text(title_text)).to_be_visible()
+
     def is_product_list_visible(self):
         # expect(self.product_list).to_be_visible() 
         count = self.product_list.count()
@@ -41,11 +44,48 @@ class ProductList():
         price = int(price_text)
         return Product(name, price)
 
+class CategoryList():
+    def __init__(self, page: Page):
+        self.page = page
+        self.category_list = self.page.locator('.left-sidebar .category-products .panel')
 
-class AllProductPage():
+    def is_category_list_visible(self):
+        count = self.category_list.count()
+        for i in range(count):
+            expect(self.category_list.nth(i)).to_be_visible()
+
+    def click_category(self, category_name):
+        self.category_list.get_by_text(category_name, exact=True).click()
+
+    def get_nth_subcategory(self, category_name, idx):
+        subcategories = self.category_list.locator(f'#{category_name} .panel-body ul li')
+        return subcategories.nth(idx).get_by_role('link').inner_text().strip()
+
+    def click_nth_subcategory(self, category_name, idx):
+        subcategories = self.category_list.locator(f'#{category_name} .panel-body ul li')
+        subcategories.nth(idx).get_by_role('link').click()
+        return ProductPage(self.page)
+
+class BrandList():
+    def __init__(self, page: Page):
+        self.page = page
+        self.brand_list = self.page.locator('.left-sidebar .brands_products .brands-name')
+
+    def is_brand_list_visible(self):
+        count = self.brand_list.count()
+        for i in range(count):
+            expect(self.brand_list.nth(i)).to_be_visible()
+
+    def click_brand(self, brand_name):
+        self.brand_list.get_by_text(brand_name).click()
+        return ProductPage(self.page)
+
+class ProductPage():
     def __init__(self, page: Page):
         self.page = page
         self.product_list = ProductList(page)
+        self.brand_list = BrandList(page)
+        self.category_list = CategoryList(page)
         self.cart_modal = CartModal(page)
         self.search_bar = self.page.locator('[id="search_product"]')
         self.search_button = self.page.locator('[id="submit_search"]')

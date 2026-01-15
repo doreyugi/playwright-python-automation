@@ -1,4 +1,4 @@
-from pages.page_header_footer import Footer
+from pages.page_header_footer import Footer, Header
 from playwright.sync_api import Page, expect
 from test_data.user_data import User
 
@@ -17,6 +17,7 @@ class CartPage():
     def __init__(self, page: Page):
         self.page = page
         self.footer = Footer(page)
+        self.header = Header(page)
         self.checkout_modal = CheckoutModal(page)
         self.cart_table = self.page.locator('#cart_info_table')
         self.cart_items = self.cart_table.locator('tbody tr')
@@ -39,8 +40,8 @@ class CartPage():
             row = self.cart_items.nth(idx)
             expect(row.locator('.cart_product')).to_be_visible()
             expect(row.locator('.cart_description')).to_contain_text(expected_products[idx].name)
-            expect(row.locator('.cart_price')).to_have_value('Rs. ' + str(expected_products[idx].price))
-            expect(row.locator('.cart_quantity')).to_have_value(str(expected_products[idx].quantity))
+            expect(row.locator('.cart_price')).to_contain_text('Rs. ' + str(expected_products[idx].price))
+            expect(row.locator('.cart_quantity')).to_contain_text(str(expected_products[idx].quantity))
             price = int(row.locator('.cart_price').inner_text().removeprefix('Rs. '))
             quantity = int(row.locator('.cart_quantity').inner_text())
             total = 'Rs. ' + str(price * quantity)
@@ -49,6 +50,10 @@ class CartPage():
     def click_proceed_to_checkout(self):
         self.checkout_button.click()
         return CheckoutPage(self.page)
+
+    def click_remove_nth_product(self, idx):
+        row = self.cart_items.nth(idx)
+        row.locator('.cart_delete .cart_quantity_delete').click()
 
 class CheckoutPage():
     def __init__(self, page: Page):
@@ -81,8 +86,8 @@ class CheckoutPage():
         for idx in range(count):
             row = cart_items.nth(idx)
             expect(row.locator('.cart_description h4')).to_contain_text(products[idx].name)
-            expect(row.locator('.cart_price')).to_have_value('Rs. ' + str(products[idx].price))
-            expect(row.locator('.cart_quantity')).to_have_value(str(products[idx].quantity))
+            expect(row.locator('.cart_price')).to_contain_text('Rs. ' + str(products[idx].price))
+            expect(row.locator('.cart_quantity')).to_contain_text(str(products[idx].quantity))
             price = int(row.locator('.cart_price').inner_text().removeprefix('Rs. '))
             quantity = int(row.locator('.cart_quantity').inner_text())
             total_bill += price * quantity
