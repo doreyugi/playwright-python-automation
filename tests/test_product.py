@@ -1,3 +1,5 @@
+from test_data.user_data import existing_user
+
 # Test Case 8: Verify All Products and product detail page
 def test_all_products_and_product_detail(homepage):
     # 4. Click on 'Products' button
@@ -58,3 +60,20 @@ def test_view_brand_products(homepage):
     # 8. Verify that user is navigated to that brand page and can see products
     product_page.product_list.verify_product_list_title("BRAND - H&M PRODUCTS")
     product_page.product_list.is_product_list_visible()
+
+# Test Case 21: Add review on product
+def test_add_review_on_product(homepage):
+    # 3. Click on 'Products' button
+    product_page = homepage.header.click_products_button()
+    # 4. Verify user is navigated to ALL PRODUCTS page successfully
+    product_page.is_all_products_page()
+    # 5. Click on 'View Product' button
+    product_detail_page = product_page.product_list.click_view_nth_product(0)
+    # 6. Verify 'Write Your Review' is visible
+    product_detail_page.is_write_your_review_visible()
+    # 7. Enter name, email and review
+    product_detail_page.fill_review_form(existing_user.username, existing_user.email, "This is a test review.")
+    # 8. Click 'Submit' button
+    product_detail_page.click_submit_review()
+    # 9. Verify success message 'Thank you for your review.'
+    product_detail_page.verify_review_success_message()

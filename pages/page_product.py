@@ -114,6 +114,10 @@ class ProductDetailPage():
         self.product_condition = self.product_info.locator("p").filter(has_text="Condition:")
         self.product_brand = self.product_info.locator("p").filter(has_text="Brand:")
         self.product_quantity = self.product_info.locator('#quantity')
+        self.review_name = page.locator('#review-form #name')
+        self.review_email = page.locator('#review-form #email')
+        self.review_text = page.locator('#review-form #review')
+        self.submit_review_button = page.locator('#button-review')
 
     def is_product_detail_visible(self):
         expect(self.product_info).to_be_visible()
@@ -124,11 +128,25 @@ class ProductDetailPage():
         expect(self.product_condition).to_be_visible()
         expect(self.product_brand).to_be_visible()
 
+    def is_write_your_review_visible(self):
+        expect(self.page.get_by_text("Write Your Review")).to_be_visible()
+
     def increase_quantity(self, num):
         self.product_quantity.fill(str(num))
 
     def click_add_to_cart(self):
         self.product_info.get_by_role('button', name='Add to cart').click()
+
+    def fill_review_form(self, name, email, review):
+        self.review_name.fill(name)
+        self.review_email.fill(email)
+        self.review_text.fill(review)
+
+    def click_submit_review(self):
+        self.submit_review_button.click()
+
+    def verify_review_success_message(self):
+        expect(self.page.get_by_text("Thank you for your review.")).to_be_visible()
 
     def get_product_info(self):
         name = self.product_name.inner_text().strip()

@@ -63,7 +63,7 @@ class CheckoutPage():
         self.order_review_section = self.page.locator('#cart_info')
         self.comment = self.page.locator('#ordemsg').locator('[name="message"]')
 
-    def _verify_address(self, address_locator, user):
+    def verify_address(self, address_locator, user):
         expect(address_locator.locator('.address_firstname.address_lastname')).to_contain_text(user.first_name + " " + user.last_name)
         expect(address_locator.locator('.address_address1.address_address2').nth(0)).to_contain_text(user.company)
         expect(address_locator.locator('.address_address1.address_address2').nth(1)).to_contain_text(user.address1)
@@ -73,10 +73,10 @@ class CheckoutPage():
         expect(address_locator.locator('.address_phone')).to_contain_text(user.mobile_number)
 
     def verify_address_details(self, user):
-        self._verify_address(self.address_delivery, user)
+        self.verify_address(self.address_delivery, user)
 
     def verify_billing_address_details(self, user):
-        self._verify_address(self.address_billing, user)
+        self.verify_address(self.address_billing, user)
 
     def verify_order_review_section(self, products):
         expect(self.order_review_section).to_be_visible()
