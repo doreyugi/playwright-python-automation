@@ -48,7 +48,6 @@ Covered scenarios include:
 - Category and brand filtering
 - Product reviews and recommended items
 - Address validation and invoice download
-- UI behavior (scroll up with / without arrow)
 
 ## How to Run the Tests
 
